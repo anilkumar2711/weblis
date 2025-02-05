@@ -19,35 +19,44 @@ function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="bg-white p-8 rounded-lg border border-gray-300 w-full max-w-sm">
+        <h2 className="text-3xl font-logo text-center mb-6">Instagram</h2>
         <form onSubmit={handleLogin}>
           <div className="mb-4">
-            <label className="block text-gray-700">Email or Mobile Number</label>
             <input
               type="text"
               value={contact}
               onChange={(e) => setContact(e.target.value)}
-              className="mt-1 p-2 w-full border rounded focus:outline-none focus:ring"
+              className="mt-1 p-2 w-full border border-gray-300 rounded-sm focus:outline-none focus:border-gray-400"
+              placeholder="Email or Mobile Number"
               required
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 p-2 w-full border rounded focus:outline-none focus:ring"
+              className="mt-1 p-2 w-full border border-gray-300 rounded-sm focus:outline-none focus:border-gray-400"
+              placeholder="Password"
               required
             />
           </div>
-          <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">
-            Login
+          <button type="submit" className="w-full bg-blue-500 text-white py-1 rounded-md hover:bg-blue-600 transition">
+            Log in
           </button>
         </form>
-        {loginMsg && <p className="mt-4 text-center text-green-600">{loginMsg}</p>}
+        <div className="flex items-center my-6">
+          <div className="flex-grow border-t border-gray-300"></div>
+          <span className="mx-4 text-gray-500">OR</span>
+          <div className="flex-grow border-t border-gray-300"></div>
+        </div>
+        <button className="w-full text-blue-900 font-semibold py-1 rounded-md">
+          Log in with Facebook
+        </button>
+        <p className="mt-4 text-center text-sm text-gray-600">Forgot password?</p>
+        {loginMsg && <p className="mt-4 text-center text-sm text-green-600">{loginMsg}</p>}
       </div>
     </div>
   );
