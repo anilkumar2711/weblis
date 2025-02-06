@@ -31,12 +31,12 @@ app.post('/api/login', (req, res) => {
     }
 });
 
-app.post('/api/google-login', async (req, res) => {
+app.post('/api/auth/google', async (req, res) => {
   const { token } = req.body;
   try {
       const ticket = await client.verifyIdToken({
           idToken: token,
-          audience: "YOUR_GOOGLE_CLIENT_ID"
+          audience: "334970627820-r857almbuk5rjvjocem5pj1odothipt0.apps.googleusercontent.com"
       });
       const { email, name } = ticket.getPayload();
       
@@ -48,6 +48,7 @@ app.post('/api/google-login', async (req, res) => {
       
       res.json({ message: 'Google login successful', user });
   } catch (error) {
+      console.error('Error verifying Google token:', error);
       res.status(400).json({ error: 'Invalid Google token' });
   }
 });

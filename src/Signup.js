@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { FaFacebookF } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 const Signup = () => {
   const [username, setUsername] = useState('');
@@ -14,31 +14,35 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  try {
-    const response = await axios.post('http://localhost:5000/api/signup', {username,phone, email, password });
-    console.log(response.data);
-    // Handle successful login
-    if (response.ok) {
-      // If the response status is 200 (OK), navigate to the login page
-      navigate('/login');
-    } else {
-      // Handle errors (e.g., display an error message)
-      console.error('Signup failed');
-    }
-  } catch (error) {
-    console.error('Login failed', error.response.data);
-  }
-  };
-  const handleGoogleSuccess = async (response) => {
     try {
-      const res = await axios.post('http://localhost:5000/api/google-login', { token: response.credential });
-      console.log(res.data);
-      navigate('/dashboard');
+      const response = await axios.post('http://localhost:5000/api/signup', { username, phone, email, password });
+      console.log(response.data);
+      if (response.status === 200) {
+        navigate('/login');
+      } else {
+        console.error('Signup failed');
+      }
     } catch (error) {
-      console.error('Google login failed', error);
+      console.error('Signup failed', error.response.data);
     }
   };
-   
+
+  const handleGoogleLoginSuccess = async (credentialResponse) => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/google', {
+        token: credentialResponse.credential,
+      });
+      console.log('Google Login Success:', response.data);
+      navigate('/'); // Redirect to home or dashboard after successful login
+    } catch (error) {
+      console.error('Google Login Failed:', error.response.data);
+    }
+  };
+
+  const handleGoogleLoginFailure = () => {
+    console.error('Google Login Failed');
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
@@ -85,34 +89,43 @@ const Signup = () => {
             />
           </div>
           <button
-             onClick={() => navigate('/login')}
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
           >
             Sign Up
           </button>
         </form>
-        
+
         <hr className="h-px my-8 bg-gray-400 border-0 dark:bg-gray-900"></hr>
 
-          <div>
+        <div>
           <button
-            className="w-full flex items-center justify-center bg-blue-600 text-white pl-1 py-2 rounded-lg hover:bg-blue-700"
+            className="w-full flex items-center justify-center bg-blue-600 text-white mb-4 pl-1 py-2 rounded-lg hover:bg-blue-700"
           >
-             <FaFacebookF className='mr-4'/>
+            <FaFacebookF className='mr-4' />
             <span>Signup With Facebook</span>
           </button>
-          </div>
+        </div>
 
-          <div>
-          <button
-            className="w-full flex items-center justify-center  mt-4 pl-1 py-2 border rounded-lg"
-          >
-             <FcGoogle className='mr-10'/>
-            <span>Login With Google</span>
-          </button>
-          </div>
-         
+        <div>
+          <GoogleOAuthProvider clientId="334970627820-r857almbuk5rjvjocem5pj1odothipt0.apps.googleusercontent.com">
+            <GoogleLogin
+              onSuccess={handleGoogleLoginSuccess}
+              onError={handleGoogleLoginFailure}
+              render={(renderProps) => (
+                <button
+                  onClick={renderProps.onClick}
+                  disabled={renderProps.disabled}
+                  className="w-full flex items-center justify-center mt-4 pl-1 py-2 border rounded-lg"
+                >
+                  <FcGoogle className='mr-10' />
+                  <span>Login With Google</span>
+                </button>
+              )}
+            />
+          </GoogleOAuthProvider>
+        </div>
+
         <div className="mt-6 text-center">
           <button
             onClick={() => navigate('/login')}
@@ -121,7 +134,6 @@ const Signup = () => {
             Already have an account? Login
           </button>
         </div>
-
       </div>
     </div>
   );
