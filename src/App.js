@@ -5,6 +5,7 @@ import Signup from './Signup';
 
 function App() {
   return (
+    
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" element={<Login />} />
       </Routes>
     </Router>
+ 
   );
 }
 

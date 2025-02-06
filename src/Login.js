@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaFacebookF } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -21,10 +22,32 @@ const Login = () => {
       console.error('Login failed', error.response.data);
     }
   };
+  const handleGoogleLoginSuccess = async (credentialResponse) => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/google', {
+        token: credentialResponse.credential,
+      });
+      console.log('Google Login Success:', response.data);
+      navigate('/'); // Redirect to home or dashboard after successful login
+    } catch (error) {
+      console.error('Google Login Failed:', error.response.data);
+    }
+  };
 
+  const handleGoogleLoginFailure = () => {
+    console.error('Google Login Failed');
+  };
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 ">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+    <div className="flex h-screen" style={{ backgroundImage: "url('')" }}>
+      <div className="w-1/2 hidden md:block">
+        <img 
+          src="https://admin.12grids.com/uploads/blogs/original_cover_images/Webp/Future_Of_Responsive_Web_Design_12Grids.webp" 
+          alt="Login Background" 
+          className="w-full h-full object-cover"
+        />
+      </div>
+      <div className="w-full md:w-1/2 flex items-center justify-center bg-grey-200" >
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md" >
         <h2 className="text-2xl font-bold mb-6 text-center">Hi, Welcome Back!</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -59,7 +82,7 @@ const Login = () => {
         
                   <div>
                   <button
-                    className="w-full flex items-center justify-center bg-blue-600 text-white pl-1 py-2 rounded-lg hover:bg-blue-700"
+                    className="w-full flex items-center justify-center bg-blue-600 text-white mb-4 pl-1 py-2 rounded-lg hover:bg-blue-700"
                   >
                      <FaFacebookF className='mr-4'/>
                     <span>Signup With Facebook</span>
@@ -67,13 +90,23 @@ const Login = () => {
                   </div>
         
                   <div>
-                  <button
-                    className="w-full flex items-center justify-center  mt-4 pl-1 py-2 border rounded-lg"
-                  >
-                     <FcGoogle className='mr-10'/>
-                    <span>Login With Google</span>
-                  </button>
-                  </div>
+          <GoogleOAuthProvider clientId="334970627820-r857almbuk5rjvjocem5pj1odothipt0.apps.googleusercontent.com">
+            <GoogleLogin
+              onSuccess={handleGoogleLoginSuccess}
+              onError={handleGoogleLoginFailure}
+              render={(renderProps) => (
+                <button
+                  onClick={renderProps.onClick}
+                  disabled={renderProps.disabled}
+                  className="w-full flex items-center justify-center mt-4 pl-1 py-2 border rounded-lg"
+                >
+                  <FcGoogle className='mr-10' />
+                  <span>Login With Google</span>
+                </button>
+              )}
+            />
+          </GoogleOAuthProvider>
+        </div>
                  
 
         <div className="mt-6 text-center">
@@ -84,6 +117,7 @@ const Login = () => {
             Don't have an account? Sign Up
           </button>
         </div>
+      </div>
       </div>
     </div>
   );
