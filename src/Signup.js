@@ -44,8 +44,17 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+    <div className="flex h-screen" style={{ backgroundImage: "url('')" }}>
+      <div className="w-1/2 hidden md:block">
+        <img 
+          src="https://img.freepik.com/free-vector/business-logo_23-2147503133.jpg?t=st=1738898296~exp=1738901896~hmac=2bac051b338811aa716312095334dd74599ad0b2ef5b7df57dabbf12f7882395&w=740" 
+          alt="Login Background" 
+          className="w-full h-full object-cover"
+        />
+      </div>
+      <div className="w-full md:w-1/2 flex items-center justify-center bg-gray-200">
+      {/* style={{background:"URL('')"}} */}
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md" >
         <h2 className="text-2xl font-bold mb-6 text-center">Create an account</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -136,6 +145,8 @@ const Signup = () => {
         </div>
       </div>
     </div>
+    </div>
+   
   );
 };
 
